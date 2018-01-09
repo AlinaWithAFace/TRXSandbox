@@ -1,18 +1,18 @@
 #orderbook_test {
-  border: solid 1px black;
+  border: 1px black solid;
   /*width:35%;*/
   height: 600px;
   overflow: scroll; }
 
 #stats_table .col-xs-2 {
-  border: solid 1px black;
+  border: 1px black solid;
   font-size: 90%;
   padding: 10px; }
 
 #usertransaction, #markettransaction {
   height: 300px;
   overflow: auto;
-  border: 1px solid black;
+  border: 1px black solid;
   padding: 2%; }
 
 #transactionswitcher {

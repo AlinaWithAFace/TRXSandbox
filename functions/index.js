@@ -151,7 +151,7 @@ if (THISISLOCAL){
   //   }
   // });
 
-  /*
+  /**
   Firebase function: this trigger runs before the game to set up the three dat sim.
   It listens on when Sessions/{sessionId}/GameParams are created and creates a
   playable session for U.I and calls doTheSuperThing()
@@ -206,7 +206,7 @@ let loadGame = function() {
   });
 }
 
-/*
+/**
 days: Int, default is 0; the current day of the sim, usually between 0-4
 
 Helper function for Firebase Function runBeforeSim() and called automatically
@@ -236,7 +236,7 @@ var rectifyTimes = function(){
   }
 }
 
-/*
+/**
 days: Int, the current day of the sim, usually between 0-4
 
 Helper function for Firebase Function startSession(), getNextEvent(), and
@@ -280,7 +280,7 @@ let resumeGame = function(days){
   });
 }
 
-/*
+/**
 days: Int, the current day of the sim, usually between 0-4
 
 Helper function for doTheThing()
@@ -298,7 +298,7 @@ let startGame = function(days) {
   });
 }
 
-/*
+/**
 days: Int, the current day of the sim, usually between 0-4
 
 Main game engine
@@ -338,7 +338,7 @@ var getNextEvent = function(days){
   }
 };
 
-/*
+/**
 Purpose: Cleans up the game when its over, removes listeners and changes the
  status of running
 Returns: Promise
@@ -354,7 +354,7 @@ let endGame = function() {
   });
 }
 
-/*
+/**
 Purpose: Assignes all neccessary listners to all users in a session and sets up
  user Stats to starting state
 */
@@ -409,7 +409,7 @@ let findUser = function(usersKeys, userId) {
   return false;
 }
 
-/*
+/**
 user: {userId, displayName}
 Helper function for assignListeners()
 
@@ -427,7 +427,7 @@ let setUpUsers = function(user) {
   });
 }
 
-/*
+/**
 userId: String, unique id for the user
 
 Helper function for initializeMarket() and setUpUsers()
@@ -462,7 +462,7 @@ let resetUserVitals = function(userId) {
   return Promise.all(proms);
 }
 
-/*
+/**
 SessionData: {bid, ask, run, lastPrice, orderbook, guid}
 simulator: {msPerSecond, buffer, gameTime, pStar, events,
  timeSeries, gameStart, timeDate, startTime}
@@ -481,7 +481,7 @@ let saveData = function(SessionData, simulator) {
   }
 }
 
-/*
+/**
 SessionData: {bid, ask, run, lastPrice, orderbook, guid}
 
 Helper function for saveData()
@@ -500,7 +500,7 @@ let saveSessionData = function(SessionData) {
   return admin.database().ref(session).child("/ImportantData/SessionData").set(object);
 }
 
-/*
+/**
 simulator: {msPerSecond, buffer, gameTime, pStar, events,
  timeSeries, gameStart, timeDate, startTime}
 
@@ -523,7 +523,7 @@ let saveSimulator = function(simulator) {
   return admin.database().ref(session).child("/ImportantData/Simulator").set(object);
 }
 
-/*
+/**
 Helper function for endGame()
 Purpose: Deletes all user listeners at the end of a session
 Returns: Promise
@@ -542,7 +542,7 @@ let stopListening = function() {
 };
 
 
-/*
+/**
 UserId: String, unique ID for a user
 
 Helper function for assignListeners()
@@ -562,7 +562,7 @@ let assignOrderListener = function(UserId) {
   });
 }
 
-/*
+/**
 UserId: String, unique ID for a user
 
 Helper function for assignListeners()
@@ -590,7 +590,7 @@ let assignDeleteListener = function(UserId) {
   });
 }
 
-/*
+/**
 Purpose: assign the simulator params pulling them down from firebase
 Returns: Promise
 */
@@ -930,7 +930,7 @@ function removeKeys(object){
    return array;
  }
 
-/*
+/**
 userId: String, id of user
 type: String, the type of order; "Ask" or "Bid"
 AssetId: String, The assetId assoicated with the order; should be "INTC"
@@ -948,7 +948,7 @@ let userTransaction = function(userID, type, assetID, strike, transactionVolume,
     return adjustStats(userID, strike, transactionVolume, type);
   });
 }
-/*
+/**
 userId: String, id of user
 type: String, the type of order; "Ask" or "Bid"
 AssetId: String, The assetId assoicated with the order; should be "INTC"
@@ -973,7 +973,7 @@ let postUserTransaction = function(userID, type, assetID, strike, transactionVol
     Volume: transactionVolume
   });
 }
-/*
+/**
 userId: String, id of user
 type: String, the type of order; "Ask" or "Bid"
 strike: Int, The strike price the order was transacted at; In the formate of 2010
@@ -994,7 +994,7 @@ let adjustCash = function(userID, strike, transactionVolume, type) {
     }
   });
 }
-/*
+/**
 userId: String, id of user
 type: String, the type of order; "Ask" or "Bid"
 strike: Int, The strike price the order was transacted at; In the formate of 2010
@@ -1122,7 +1122,7 @@ let calcPosition = function(userID, strike, transactionVolume, type) {
 
 }
 
-/*
+/**
 userId: String, id of user
 strike: Int, The strike price the order was transacted at; In the formate of 2010
 transactionVolume: Int, The volume of the transaction; Always positive
@@ -1153,7 +1153,7 @@ let calcBuyVWAP = function(userID, strike, transactionVolume) {
       console.log("error: ", error);
     });
 }
-/*
+/**
 userId: String, id of user
 strike: Int, The strike price the order was transacted at; In the formate of 2010
 transactionVolume: Int, The volume of the transaction; Always positive
@@ -1184,7 +1184,7 @@ let calcSellVWAP = function(userID, strike, transactionVolume) {
       console.log("error: ", error);
     });
 }
-/*
+/**
 userId: String, id of user
 strike: Int, The strike price the order was transacted at; In the formate of 2010
 transactionVolume: Int, The volume of the transaction; Always positive
@@ -1215,7 +1215,7 @@ let calcNetVWAP = function(userID, strike, transactionVolume) {
       console.log("error: ", error);
     });
 }
-/*
+/**
 userId: String, id of user
 type: String, the type of order; "Ask" or "Bid"
 strike: Int, The strike price the order was transacted at; In the formate of 2010
@@ -1241,7 +1241,7 @@ let calcVWAP = function(userID, strike, transactionVolume, type) {
     });
   }
 }
-/*
+/**
 userId: String, id of user
 type: String, the type of order; "Ask" or "Bid"
 strike: Int, The strike price the order was transacted at; In the formate of 2010
@@ -1262,7 +1262,7 @@ let calcShares = function(userID, strike, transactionVolume, type) {
     });
 }
 
-/*
+/**
 order: {AheadOfThis, OrderId, UserId, Type, Volume, AssetId, Strike, Class},
  The order already on the orderbook
 newOrder: {AheadOfThis, OrderId, UserId, Type, Volume, AssetId, Strike, Class},
@@ -1323,7 +1323,7 @@ let createTransactionRecord = function(order, newOrder, strike, transactionVolum
     });
 }
 
-/*
+/**
 aggOB: {"2010":{"Ask:" 0, "Bid":0}}
 
 Helper function of fulfillTransaction() and createLimitOrder()
@@ -1337,7 +1337,7 @@ let updateSessionAggOrderBook = function(aggOB) {
     return data;
   });
 };
-/*
+/**
 order: {AheadOfThis, OrderId, UserId, Type, Volume, AssetId, Strike, Class},
  order already on orderbook
 strike: Int, The strike price the order was transacted at; In the formate of 2010
@@ -1361,7 +1361,7 @@ let userUpdateOrderBook = function(order, strike, transactionVolume) {
   }
 }
 
-/*
+/**
 orderbook: {"2090":{"Bids":{orderid:{order}}"Asks:"{}}}
 
 Helper function for fulfillTransaction(), createLimitOrder(),
@@ -1382,7 +1382,7 @@ let setSessionOrderBook = function(orderbook) {
   });
 }
 
-/*
+/**
 order: {AheadOfThis, OrderId, UserId, Type, Volume, AssetId, Strike, Class},
  new order about to be placed on orderbook
 userId: String, unique ID of the user
@@ -1397,7 +1397,7 @@ let userCreateLimitOrder = function(order, userId) {
   .set(order));
 }
 
-/*
+/**
 order: {AheadOfThis, OrderId, UserId, Type, Volume, AssetId, Strike, Class},
  The order already on the orderbook
 newOrder: {AheadOfThis, OrderId, UserId, Type, Volume, AssetId, Strike, Class},
@@ -1453,7 +1453,7 @@ let fulfillTransaction = function(order, newOrder, strike, orderbook){
 
 }
 
-/*
+/**
 order: {AheadOfThis, OrderId, UserId, Type, Volume, AssetId, Strike, Class},
  an order about to be placed on the books
 userId: String, unique ID of the user
@@ -1725,7 +1725,7 @@ var getOrderBook = function(order){
     });
 }
 
-/*
+/**
 order: {AheadOfThis, OrderId, UserId, Type, Volume, AssetId, Strike, Class},
  the user order coming in
 userId: String, unique ID of the user
@@ -1760,7 +1760,7 @@ var checkForTransaction = function(order, userId){
 
 }
 
-/*
+/**
 order: {AheadOfThis, OrderId, UserId, Type, Volume, AssetId, Strike, Class},
  the user order coming in
 userId: String, unique ID of the user
@@ -1776,7 +1776,7 @@ let processOrder = function(order, userId) {
   return Promise.resolve(checkForTransaction(order, userId)).then(data=>{return data});
 }
 
-/*
+/**
 lastStrikeSold: Int, the last strike an order was sold at in the form 2010
 assetId: String, unique id of the asset should be "INTC"
 */
@@ -1799,7 +1799,7 @@ let initAggOB = function() {
   return book;
 }
 
-/*
+/**
 Helper function for startGame() and doTheSuperThing()
 Purpose: initializes the AggOB, loads in the SessionData and simulator,
 and resets/sets user starting stats
@@ -1845,7 +1845,7 @@ let initializeMarket = function(){
   }
 }
 
-/*
+/**
 Helper function for loadGame() and initializeMarket()
 Purpose: Load in the simulator data from the database
 Returns: Promise
@@ -1865,7 +1865,7 @@ let loadSimulator = function() {
   });
 }
 
-/*
+/**
 Helper function for loadGame()
 Purpose: Load in the events for the day
 Returns: Promise
@@ -1877,7 +1877,7 @@ let loadEvents = function() {
   });
 }
 
-/*
+/**
 Helper function for loadGame() and initializeMarket()
 Purpose: Load in the SessionData data from the database
 Returns: Promise

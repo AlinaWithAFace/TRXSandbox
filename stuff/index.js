@@ -41,26 +41,26 @@ let reset = function() {
   simulator.getTime = function(){//Unix Time Stamp
       let time = new Date().getTime();
       return time;
-  }
+  };
   simulator.sinceStart = function(){//Real world ms since game start
       return simulator.getTime() - simulator.startTime;
-  }
+  };
   simulator.firstTime = function(){
       return simulator.gameStart.toUTCString();
-  }
+  };
   simulator.currentGameTime = function(){//calculates ingame time from real world ms
       if(simulator.inASimulation) {
         return simulator.gameTime;
       } else {
         return new Date(Math.round((simulator.sinceStart()*(1/simulator.msPerSecond))*1000 + simulator.gameStart.getTime()));
       }
-  }
+  };
   simulator.initializetime = function(dayNumber){
     simulator.startTime = new Date();
     if(dayNumber > 0) {
       newDay();
     }
-  }
+  };
   simulator.getVolume = function(){ //TODO: make this beta based
     return Math.max(2, Math.floor(triangle(2,45,100)));
   }
@@ -85,7 +85,7 @@ if (THISISLOCAL){
   if(CREATEUNIQUESESSION) {
     session = "Sessions/" + admin.database().ref("Sessions/").push().key;
   }
-  /*
+  /**
   Firebase function: This trigger runs when Sessions/{sessionId}/StartSim/start is
    set to anything, by habit we set it to true. Once start is set we set running to 1
    indicating the sim is running. This preents this method from starting antoher
@@ -121,7 +121,7 @@ if (THISISLOCAL){
     });
   });
 
-  /*
+  /**
   Firebase function: this trigger runs before the game to set up the three dat sim.
   It listens on when Sessions/{sessionId}/GameParams are created and creates a
   playable session for U.I and calls doTheSuperThing()
@@ -159,7 +159,7 @@ if (THISISLOCAL){
     }
   });
 
-  // not yet implimented
+  // not yet implemented
   exports.start1 = functions.database.ref("Sessions/{sessionId}/ImportantData/function").onWrite(event => {
     let functionNum = event.data.val();
     session = "Sessions/" + event.params.sessionId;
@@ -178,7 +178,7 @@ if (THISISLOCAL){
 
 }
 
-// This method is not yet implimented
+// This method is not yet implemented
 let loadGame = function() {
   return loadSessionData().then(function() {
     return loadSimulator();
@@ -187,7 +187,7 @@ let loadGame = function() {
   });
 }
 
-/*
+/**
 days: Int, default is 0; the current day of the sim, usually between 0-4
 
 Helper function for Firebase Function runBeforeSim() and called automatically
@@ -217,7 +217,7 @@ var rectifyTimes = function(){
   }
 }
 
-/*
+/**
 days: Int, the current day of the sim, usually between 0-4
 
 Helper function for Firebase Function startSession(), getNextEvent(), and
@@ -239,7 +239,7 @@ var doTheThing = function(days) {
   }
 }
 
-/*
+/**
 days: Int, the current day of the sim, usually between 0-4
 
 Helper function for doTheThing()
@@ -257,7 +257,7 @@ let startGame = function(days) {
   });
 }
 
-/*
+/**
 days: Int, the current day of the sim, usually between 0-4
 
 Main game engine
@@ -301,7 +301,7 @@ var getNextEvent = function(days){
   }
 };
 
-/*
+/**
 Purpose: Cleans up the game when its over, removes listeners and changes the
  status of running
 Returns: Promise
@@ -314,7 +314,7 @@ let endGame = function() {
   });
 }
 
-/*
+/**
 Purpose: Assignes all neccessary listners to all users in a session and sets up
  user Stats to starting state
 */
@@ -357,7 +357,7 @@ let findUser = function(usersKeys, userId) {
   return false;
 }
 
-/*
+/**
 user: {userId, displayName}
 Helper function for assignListeners()
 
@@ -371,7 +371,7 @@ let setUpUsers = function(user) {
   });
 }
 
-/*
+/**
 userId: String, unique id for the user
 
 Helper function for initializeMarket() and setUpUsers()
@@ -405,7 +405,7 @@ let resetUserVitals = function(userId) {
   return Promise.all(proms);
 }
 
-/*
+/**
 SessionData: {bid, ask, run, lastPrice, orderbook, guid}
 simulator: {msPerSecond, buffer, gameTime, pStar, events,
  timeSeries, gameStart, timeDate, startTime}
@@ -424,7 +424,7 @@ let saveData = function(SessionData, simulator) {
   }
 }
 
-/*
+/**
 SessionData: {bid, ask, run, lastPrice, orderbook, guid}
 
 Helper function for saveData()
@@ -443,7 +443,7 @@ let saveSessionData = function(SessionData) {
   return admin.database().ref(session).child("/ImportantData/SessionData").set(object);
 }
 
-/*
+/**
 simulator: {msPerSecond, buffer, gameTime, pStar, events,
  timeSeries, gameStart, timeDate, startTime}
 
@@ -466,7 +466,7 @@ let saveSimulator = function(simulator) {
   return admin.database().ref(session).child("/ImportantData/Simulator").set(object);
 }
 
-/*
+/**
 Helper function for endGame()
 Purpose: Deletes all user listeners at the end of a session
 Returns: Promise
@@ -485,7 +485,7 @@ let stopListening = function() {
 };
 
 
-/*
+/**
 UserId: String, unique ID for a user
 
 Helper function for assignListeners()
@@ -504,7 +504,7 @@ let assignOrderListener = function(UserId) {
   });
 }
 
-/*
+/**
 UserId: String, unique ID for a user
 
 Helper function for assignListeners()
@@ -532,7 +532,7 @@ let assignDeleteListener = function(UserId) {
   });
 }
 
-/*
+/**
 Purpose: assign the simulator params pulling them down from firebase
 Returns: Promise
 */
