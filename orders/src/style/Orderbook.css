@@ -43,4 +43,8 @@
   #orderbook_test {
     font-size: 12px; } }
 
+body {
+    min-width: 600px;
+}
+
 /*# sourceMappingURL=Orderbook.css.map */

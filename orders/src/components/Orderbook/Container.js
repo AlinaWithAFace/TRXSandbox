@@ -39,6 +39,10 @@ class Container extends Component {
   }
 
   componentWillUnmount() {
+      if (this.plotlyrenderRef === undefined) {
+          this.componentDidMount();
+      }
+
     this.plotlyrenderRef.off();
   }
 

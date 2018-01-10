@@ -75,6 +75,9 @@ class TransactionSwitcher extends Component {
   }
 
   componentWillUnmount() {
+      if (this.userTransRef === undefined || this.marketTransRef === undefined) {
+          this.componentDidMount();
+      }
     this.userTransRef.off();
     this.marketTransRef.off();
   }

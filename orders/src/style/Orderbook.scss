@@ -59,3 +59,7 @@
     font-size: 12px;
   }
 }
+
+body {
+  min-width: $minimumWindowWidth;
+}
