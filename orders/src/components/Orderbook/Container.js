@@ -51,7 +51,7 @@ class Container extends Component {
     return (
       <div className="container">
         <div className="row">
-            <div id="orderbook_test" className="col-xs-12 col-lg-5">
+            <div id="orderBookTest" className="col-xs-12 col-lg-5">
                 <OrderbookContainer institution={this.props.institution} sessionid={this.props.location.state.sessionid} uid={this.props.user.uid} />
             </div>
             <div className='col-xs-12 col-lg-7'>

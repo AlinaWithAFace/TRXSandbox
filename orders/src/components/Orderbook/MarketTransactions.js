@@ -44,7 +44,7 @@ class MarketTransaction extends Component {
 
     //console.log(this.state.transactions, "in render");
     return (
-      <div className='row text-center' id='markettransaction'>
+        <div className='row text-center' id='marketTransaction'>
         {this.state.transactions.map(function(trn, index){
           var color;
           //mapping market transactions while rendering color

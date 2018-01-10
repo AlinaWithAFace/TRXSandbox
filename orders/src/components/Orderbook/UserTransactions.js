@@ -39,7 +39,7 @@ class UserTransaction extends Component {
   render() {
     //console.log(this.state.transactions, "in render");
     return (
-      <div className='row text-center' id='usertransaction'>
+        <div className='row text-center' id='userTransaction'>
         {this.state.transactions.map(function(trn, index){
           var color;
           //mapping user transactions while rendering color

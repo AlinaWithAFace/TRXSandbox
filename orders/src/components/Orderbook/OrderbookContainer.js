@@ -130,7 +130,7 @@ class OrderbookContainer extends Component {
   render() {
     return (
       <div id='PlaceOrder'>
-        <div id='placeorderstyle'>
+          <div id='placeOrderStyle'>
           <MarketOrders institution={this.props.institution} paused={this.state.paused} uid={this.props.uid} sessionid={this.props.sessionid} />
           <div className='row text-center'>
             <div className='col-xs-3'>Limit Bid</div>

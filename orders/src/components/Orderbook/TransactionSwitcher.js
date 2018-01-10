@@ -87,7 +87,8 @@ class TransactionSwitcher extends Component {
   render() {
     return (
       <div>
-		     <select className='form-control' id='transactionswitcher' ref="selectOption" onChange={(e) => this.handleChange(e)}>
+          <select className='form-control' id='transactionSwitcher' ref="selectOption"
+                  onChange={(e) => this.handleChange(e)}>
              <option  defaultValue="Market" >Market</option>
              <option value="User" >User</option>
           </select>

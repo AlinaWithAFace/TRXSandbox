@@ -8,7 +8,7 @@ let deletesPendingListeners = [];
 var THISISLOCAL = false;
 let CREATEUNIQUESESSION = false;
 let RUNFULLSIM = true;
-let RESETAFTER = 5
+let RESETAFTER = 5;
 var paused = false;
 
 // should be firebase key
@@ -40,31 +40,31 @@ let reset = function() {
   simulator.getTime = function(){//Unix Time Stamp
       let time = new Date().getTime();
       return time;
-  }
+  };
   simulator.sinceStart = function(){//Real world ms since game start
       return simulator.getTime() - simulator.startTime;
-  }
+  };
   simulator.firstTime = function(){
       return simulator.gameStart.toUTCString();
-  }
+  };
   simulator.currentGameTime = function(){//calculates ingame time from real world ms
       if(simulator.inASimulation) {
         return simulator.gameTime;
       } else {
         return new Date(Math.round((simulator.sinceStart()*(1/simulator.msPerSecond))*1000 + simulator.gameStart.getTime()));
       }
-  }
+  };
   simulator.initializetime = function(dayNumber){
     simulator.startTime = new Date();
     if(dayNumber > 0) {
       newDay();
     }
-  }
+  };
   simulator.getVolume = function(){ //TODO: make this beta based
     return Math.max(2, Math.floor(triangle(2,45,100)));
-  }
+  };
   return {sd:SessionData, sim: simulator};
-}
+};
 
 var result = reset();
 var SessionData= result.sd;
@@ -195,16 +195,16 @@ let pauseUnpause = function() {
   }).then(function(){
     return admin.database().ref(session).child("StartSim/State").set("Running");
   });
-}
+};
 
-// This method is not yet implimented
+// This method is not yet implemented
 let loadGame = function() {
   return loadSessionData().then(function() {
     return loadSimulator();
   }).then(function() {
     return loadEvents();
   });
-}
+};
 
 /**
 days: Int, default is 0; the current day of the sim, usually between 0-4
@@ -228,13 +228,13 @@ var doTheSuperThing = function(days=0) {
       return null;
     }
   });
-}
+};
 
 var rectifyTimes = function(){
   if(simulator.inASimulation === false){
     simulator.startTime = new Date(-(simulator.msPerSecond/1000)*(simulator.gameTime.getTime() - simulator.gameStart.getTime())+new Date().getTime() );
   }
-}
+};
 
 /**
 days: Int, the current day of the sim, usually between 0-4
@@ -264,7 +264,7 @@ var doTheThing = function(days) {
       }
     });
   }
-}
+};
 
 
 let resumeGame = function(days){
@@ -278,7 +278,7 @@ let resumeGame = function(days){
     //assignListeners();
     return getNextEvent(days);
   });
-}
+};
 
 /**
 days: Int, the current day of the sim, usually between 0-4
@@ -296,13 +296,13 @@ let startGame = function(days) {
   }).then(function() {
     return getNextEvent(days);
   });
-}
+};
 
 /**
 days: Int, the current day of the sim, usually between 0-4
 
 Main game engine
-Purpose: This functon keeps calling itself as long as there are events still left
+ Purpose: This function keeps calling itself as long as there are events still left
  in the day. It takes the current event and processes it. This is the life of our
  simulation.
 Returns: Promise
@@ -352,10 +352,10 @@ let endGame = function() {
     console.log("End Game");
     return admin.database().ref(session).child("StartSim/State").set("Over");
   });
-}
+};
 
 /**
-Purpose: Assignes all neccessary listners to all users in a session and sets up
+ Purpose: Assigns all necessary listeners to all users in a session and sets up
  user Stats to starting state
 */
 let assignListeners = function() {
@@ -385,7 +385,7 @@ let assignListeners = function() {
       });
     });
   });
-}
+};
 
 let assignListenersExsistingUsers = function() {
   userPendingListener = admin.database().ref(session).child("/Users/").on('child_added', function(snapshot) {
@@ -397,17 +397,17 @@ let assignListenersExsistingUsers = function() {
    orderPendingListeners.push(orderlistener);
    deletesPendingListeners.push(deleteListener);
   });
-}
+};
 
 // jackson helper function ignore
 let findUser = function(usersKeys, userId) {
   for(let i = 0; i < usersKeys.length; i++) {
-    if(usersKeys[i] == userId) {
+      if (usersKeys[i] === userId) {
       return true;
     }
   }
   return false;
-}
+};
 
 /**
 user: {userId, displayName}
@@ -425,19 +425,19 @@ let setUpUsers = function(user) {
       });
     }
   });
-}
+};
 
 /**
 userId: String, unique id for the user
 
 Helper function for initializeMarket() and setUpUsers()
-Purpose: Initalzes user stats to default settings, resets transaction, orders
+ Purpose: Initializes user stats to default settings, resets transaction, orders
  assets.
 Returns: Promise
 */
 let resetUserVitals = function(userId) {
   let statsRef = admin.database().ref(session).child("/Users/").child(userId).child("/Assets/").child("INTC/").child("Stats/");
-  let proms = []
+    let proms = [];
   console.log("initializing stats and assets");
   proms.push(statsRef.child("Shares").set(0));
   proms.push(statsRef.child("PL").set(0));
@@ -460,7 +460,7 @@ let resetUserVitals = function(userId) {
   proms.push(admin.database().ref(session).child("/Users").child(userId).child("Orders").remove());
   proms.push(admin.database().ref(session).child("/Users/").child(userId).child("/Assets/").child("Cash").set(0));
   return Promise.all(proms);
-}
+};
 
 /**
 SessionData: {bid, ask, run, lastPrice, orderbook, guid}
@@ -479,7 +479,7 @@ let saveData = function(SessionData, simulator) {
   } else {
     return Promise.resolve(null);
   }
-}
+};
 
 /**
 SessionData: {bid, ask, run, lastPrice, orderbook, guid}
@@ -496,9 +496,9 @@ let saveSessionData = function(SessionData) {
     lastPrice: SessionData.lastPrice,
     orderbook: SessionData.orderbook.toJSON(),
     guid: SessionData.guid
-  }
+  };
   return admin.database().ref(session).child("/ImportantData/SessionData").set(object);
-}
+};
 
 /**
 simulator: {msPerSecond, buffer, gameTime, pStar, events,
@@ -519,9 +519,9 @@ let saveSimulator = function(simulator) {
     gameStart: simulator.gameStart.toJSON(),
     timeDate: simulator.timeDate,
     startTime: simulator.startTime.toJSON()
-  }
+  };
   return admin.database().ref(session).child("/ImportantData/Simulator").set(object);
-}
+};
 
 /**
 Helper function for endGame()
@@ -560,7 +560,7 @@ let assignOrderListener = function(UserId) {
       return admin.database().ref(session).child("/Users/").child(UserId).child("/OrdersPending/"+snapshot.key).remove();
     });
   });
-}
+};
 
 /**
 UserId: String, unique ID for a user
@@ -588,7 +588,7 @@ let assignDeleteListener = function(UserId) {
       .child(key).remove();
     });
   });
-}
+};
 
 /**
 Purpose: assign the simulator params pulling them down from firebase
@@ -602,11 +602,11 @@ let assignSimParams = function() {
     simulator.events = simulateDay(parseInt(gp.numLiq), parseInt(gp.numInf),
      parseInt(gp.numMom), parseInt(gp.numPStar), parseFloat(gp.FracOfDay));
   });
-}
+};
 
 let beta = function(){
     return PD.rbeta(1,2,5)[0];
-}
+};
 
 var getEvents = function(numEvents){
     var x = 0;
@@ -617,7 +617,7 @@ var getEvents = function(numEvents){
         eventTimes.push(x);
     }
     return(eventTimes);
-}
+};
 
 var simulateDay =function(numL, numI, numM, numP, fractionOfDay){
     let events = [];
@@ -627,7 +627,7 @@ var simulateDay =function(numL, numI, numM, numP, fractionOfDay){
     let order1 = {
         type:"open",
         secondsUntilNext:firstEvent,
-    }
+    };
     events.push(order1);
     let perLiq = numL/numEvents;
     let perMom = perLiq + numM/numEvents;
@@ -641,14 +641,14 @@ var simulateDay =function(numL, numI, numM, numP, fractionOfDay){
             var order = {
                 type:"liq",
                 secondsUntilNext: pause,
-            }
+            };
             gameLength += pause;
             events.push(order);
         }else if(spin < perMom){
             var order = {
                 type:"mom",
                 secondsUntilNext: pause,
-            }
+            };
             gameLength += pause;
             events.push(order);
         }else if(spin < perInf){
@@ -656,7 +656,7 @@ var simulateDay =function(numL, numI, numM, numP, fractionOfDay){
             var order = {
                 type:"inf",
                 secondsUntilNext: pause,
-            }
+            };
             gameLength += pause;
             events.push(order);
         }
@@ -664,7 +664,7 @@ var simulateDay =function(numL, numI, numM, numP, fractionOfDay){
             var order = {
                 type:"pStar",
                 secondsUntilNext: pause,
-            }
+            };
             gameLength += pause;
             events.push(order);
         }
@@ -675,11 +675,11 @@ var simulateDay =function(numL, numI, numM, numP, fractionOfDay){
     events.push(lastEvent);
     events.push({type: "close", secondsUntilNext:0});
     return events;
-}
+};
 
 var getNewPstar = function(oldPstar){
     return(PD.rnorm(1,oldPstar,.5)[0]);// TODO: change Standard deviation to % of old pStar
-}
+};
 
 var triangle = function(min, mode, max){
   if (max <= min){
@@ -697,35 +697,35 @@ var triangle = function(min, mode, max){
 
 var getBid = function(){
   return SessionData.bid;
-}
+};
 
 var nearestTick = function(rawPrice){ // done
   var tick = getTick();
   return parseFloat((Math.round(parseFloat(rawPrice)/tick)*tick).toFixed(2));
-}
+};
 
 var getAsk = function(){
   return SessionData.ask;
-}
+};
 
 var getTick = function(){
   return .05;
-}
+};
 
 var getRun = function(){
   return SessionData.run;
-}
+};
 
 var updateClock = function(seconds){
   simulator.gameTime.setSeconds(simulator.gameTime.getSeconds() + seconds);
-}
+};
 
 var newDay = function() {
   simulator.gameTime.setSeconds(simulator.gameTime.getSeconds() + 63000);
   simulator.gameStart.setSeconds(simulator.gameStart.getSeconds() + 86400);
   console.log(simulator.gameTime.toUTCString());
   console.log(simulator.gameStart.toUTCString());
-}
+};
 
 var reportEvent = function(eType){
   if(!simulator.inASimulation) {
@@ -771,7 +771,7 @@ var checkSpread = function(){
   if (ask <= bid){
     throw "ASK UNDER BID";
   }
-}
+};
 
 var informedOrder = function(){
   var ask = getAsk();
@@ -865,7 +865,7 @@ var liquidityOrder = function(){
 
 let getGameTime = function () {
   return simulator.currentGameTime().toJSON();
-}
+};
 
 let makePoint = function(){
     simulator.timeSeries.push({
@@ -876,7 +876,7 @@ let makePoint = function(){
       return admin.database().ref(session).child('TimeSeries')
       .set(simulator.timeSeries);
     }
-}
+};
 
 var processEvent = function(eventType, event, dayNumber){ // done
   //console.log("processEvent called!");
@@ -918,7 +918,7 @@ let delay = function(time) {
   return new Promise(function(resolve, reject) {
     setTimeout(resolve, time);
   });
-}
+};
 
 function removeKeys(object){
   var array = [];
@@ -947,7 +947,8 @@ let userTransaction = function(userID, type, assetID, strike, transactionVolume,
   }).then(function() {
     return adjustStats(userID, strike, transactionVolume, type);
   });
-}
+};
+
 /**
 userId: String, id of user
 type: String, the type of order; "Ask" or "Bid"
@@ -972,7 +973,7 @@ let postUserTransaction = function(userID, type, assetID, strike, transactionVol
     Type: type,
     Volume: transactionVolume
   });
-}
+};
 /**
 userId: String, id of user
 type: String, the type of order; "Ask" or "Bid"
@@ -987,13 +988,13 @@ let adjustCash = function(userID, strike, transactionVolume, type) {
   return admin.database().ref(session).child("/Users/").child(userID).child("/Assets/").child("Cash")
   .transaction(function(currCash) {
     let strikePrice = parseFloat((parseInt(strike)/100).toFixed(2));
-    if(type == "Bid") {
+      if (type === "Bid") {
       return parseFloat((currCash - (transactionVolume * strikePrice)).toFixed(2));
     } else {
       return parseFloat((currCash + (transactionVolume * strikePrice)).toFixed(2));
     }
   });
-}
+};
 /**
 userId: String, id of user
 type: String, the type of order; "Ask" or "Bid"
@@ -1013,7 +1014,7 @@ let adjustStats = function(userID, strike, transactionVolume, type) {
   }).catch(error => {
     console.log(error);
   });
-}
+};
 
 
 
@@ -1039,7 +1040,7 @@ let willBeLong = function(userID, type, transactionVolume) {
       return null;
     }
   });
-}
+};
 
 // Pat you need to redo this
 let calcPosition = function(userID, strike, transactionVolume, type) {
@@ -1120,7 +1121,7 @@ let calcPosition = function(userID, strike, transactionVolume, type) {
     });
   });
 
-}
+};
 
 /**
 userId: String, id of user
@@ -1152,7 +1153,8 @@ let calcBuyVWAP = function(userID, strike, transactionVolume) {
     }).catch(error=> {
       console.log("error: ", error);
     });
-}
+};
+
 /**
 userId: String, id of user
 strike: Int, The strike price the order was transacted at; In the formate of 2010
@@ -1183,7 +1185,8 @@ let calcSellVWAP = function(userID, strike, transactionVolume) {
     }).catch(error=> {
       console.log("error: ", error);
     });
-}
+};
+
 /**
 userId: String, id of user
 strike: Int, The strike price the order was transacted at; In the formate of 2010
@@ -1214,7 +1217,8 @@ let calcNetVWAP = function(userID, strike, transactionVolume) {
     }).catch(error=> {
       console.log("error: ", error);
     });
-}
+};
+
 /**
 userId: String, id of user
 type: String, the type of order; "Ask" or "Bid"
@@ -1227,7 +1231,7 @@ different helper functions
 Returns: Promise
 */
 let calcVWAP = function(userID, strike, transactionVolume, type) {
-  if(type == "Bid") {
+    if (type === "Bid") {
     return calcBuyVWAP(userID, strike, transactionVolume).then(function() {
       return calcNetVWAP(userID, strike, transactionVolume);
     }).catch(error=> {
@@ -1240,7 +1244,8 @@ let calcVWAP = function(userID, strike, transactionVolume, type) {
       console.log("error: ", error);
     });
   }
-}
+};
+
 /**
 userId: String, id of user
 type: String, the type of order; "Ask" or "Bid"
@@ -1254,13 +1259,13 @@ Returns: Promise
 let calcShares = function(userID, strike, transactionVolume, type) {
   return admin.database().ref(session).child("/Users/").child(userID).child("Assets/").child("INTC/")
     .child("Stats/Shares").transaction(data=> {
-      if(type == "Bid") {
+          if (type === "Bid") {
         return data + transactionVolume;
       } else {
         return data - transactionVolume;
       }
     });
-}
+};
 
 /**
 order: {AheadOfThis, OrderId, UserId, Type, Volume, AssetId, Strike, Class},
@@ -1283,7 +1288,7 @@ let createTransactionRecord = function(order, newOrder, strike, transactionVolum
       Price: strike,
       Time: time,
       Volume: transactionVolume,
-      Type: newOrder.Type == "Ask" ? "Sell" : "Buy"
+        Type: newOrder.Type === "Ask" ? "Sell" : "Buy"
     })).then(function() {
       return updateCurrentAssetPrice(strike, order.AssetId);
     }).then(function() {
@@ -1321,7 +1326,7 @@ let createTransactionRecord = function(order, newOrder, strike, transactionVolum
         return Promise.all(proms);
       });
     });
-}
+};
 
 /**
 aggOB: {"2010":{"Ask:" 0, "Bid":0}}
@@ -1359,7 +1364,7 @@ let userUpdateOrderBook = function(order, strike, transactionVolume) {
     .child(order.UserId).child("Orders").child(order.AssetId).child(strike)
     .child(order.OrderId).child("Volume").set(order.Volume - transactionVolume));
   }
-}
+};
 
 /**
 orderbook: {"2090":{"Bids":{orderid:{order}}"Asks:"{}}}
@@ -1380,7 +1385,7 @@ let setSessionOrderBook = function(orderbook) {
   }).then(function(){
     return admin.database().ref(session).child("ImportantData/").child("SessionData/").child("bid").set(getBid());
   });
-}
+};
 
 /**
 order: {AheadOfThis, OrderId, UserId, Type, Volume, AssetId, Strike, Class},
@@ -1395,7 +1400,7 @@ let userCreateLimitOrder = function(order, userId) {
   return Promise.resolve(admin.database().ref(session).child("/Users/").child(userId)
   .child("Orders").child(order.AssetId).child(order.Strike).child(order.OrderId)
   .set(order));
-}
+};
 
 /**
 order: {AheadOfThis, OrderId, UserId, Type, Volume, AssetId, Strike, Class},
@@ -1451,7 +1456,7 @@ let fulfillTransaction = function(order, newOrder, strike, orderbook){
     console.log("OVER TIME");
   }
 
-}
+};
 
 /**
 order: {AheadOfThis, OrderId, UserId, Type, Volume, AssetId, Strike, Class},
@@ -1477,7 +1482,7 @@ var createLimitOrder = function(order, userId, orderbook){
       console.log(error);
     });
   }
-}
+};
 
 var OrderBook = function(obJSON){
    var self = this;
@@ -1489,11 +1494,11 @@ var OrderBook = function(obJSON){
      if (type === "Ask"){
        // LOOK at Bids
        let bid = this.getBid();
-       if(bid == 0) {
+         if (bid === 0) {
          return null;
        }
        reserve = bid.Strike;
-       if(!newOrder.Strike && newOrder.Class == "Market") {
+         if (!newOrder.Strike && newOrder.Class === "Market") {
          return bid;
        }
        if (parseInt(newOrder.Strike) > parseInt(reserve)){
@@ -1506,11 +1511,11 @@ var OrderBook = function(obJSON){
      else {
        // LOOK at Asks
        let ask = this.getAsk();
-       if(ask == 999999) {
+         if (ask === 999999) {
          return null;
        }
        reserve = ask.Strike;
-       if(!newOrder.Strike && newOrder.Class == "Market") {
+         if (!newOrder.Strike && newOrder.Class === "Market") {
          return ask;
        }
        if (parseInt(newOrder.Strike) < parseInt(reserve)){
@@ -1561,7 +1566,7 @@ var OrderBook = function(obJSON){
        Strike: newOrder.Strike,
        OrderId: SessionData.guid,
        AssetId: newOrder.AssetId
-     }
+     };
 
      self.Strike[newOrder.Strike][newOrder.Type + "s"][order.OrderId] = order;
 
@@ -1575,7 +1580,7 @@ var OrderBook = function(obJSON){
        self.Strike[theStrike][theTypes][key].AheadOfThis = aheadOfThis;
        aheadOfThis += self.Strike[theStrike][theTypes][key].Volume;
      }
-   }
+   };
    this.fillOrder = function(existingOrder, volumeDesired, strikeAsInt){
       if(existingOrder.Volume > volumeDesired){
         existingOrder.Volume -= volumeDesired;
@@ -1597,7 +1602,7 @@ var OrderBook = function(obJSON){
      let max = "0";
 
      for (let strike in self.Strike){
-       if (self.Strike[strike]["Bids"] === undefined || Object.keys(self.Strike[strike]["Bids"]).length == 0){
+         if (self.Strike[strike]["Bids"] === undefined || Object.keys(self.Strike[strike]["Bids"]).length === 0) {
        }
        else{
          if(parseInt(max) < parseInt(strike)) {
@@ -1606,7 +1611,7 @@ var OrderBook = function(obJSON){
          }
        }
      }
-     if(max == '0') {
+       if (max === '0') {
        SessionData.bid = 0.00;
        return max;
      }
@@ -1622,7 +1627,7 @@ var OrderBook = function(obJSON){
      // TODO this presumes order of self.Strike keys
      let min = "999999";
      for (let strike in self.Strike){
-       if (self.Strike[strike]["Asks"] === undefined || Object.keys(self.Strike[strike]["Asks"]).length == 0){
+         if (self.Strike[strike]["Asks"] === undefined || Object.keys(self.Strike[strike]["Asks"]).length === 0) {
        }
        else{
          if(parseInt(strike) < parseInt(min)) {
@@ -1632,7 +1637,7 @@ var OrderBook = function(obJSON){
 
        }
      }
-     if(min == '999999') {
+       if (min === '999999') {
        SessionData.ask = 9999.99;
        return min;
      }
@@ -1657,7 +1662,7 @@ var OrderBook = function(obJSON){
           }
         }
         return theSum;
-      }
+      };
 
       var zeroAgg = SessionData.zeroAgg;
       let lastStrikeCreated = null;
@@ -1716,14 +1721,14 @@ var OrderBook = function(obJSON){
       let type = existingOrder.Type +"s";
       delete self.Strike[strike][type][existingOrder.OrderId];
    }
-}
+};
 
 var getOrderBook = function(order){
     return admin.database().ref(session).child("/Assets/").child(order.AssetId)
     .child("/Orderbook").once('value').then(function(snapshot) {
       return new OrderBook(snapshot.val());
     });
-}
+};
 
 /**
 order: {AheadOfThis, OrderId, UserId, Type, Volume, AssetId, Strike, Class},
@@ -1739,7 +1744,7 @@ Returns: Promise or null
 var checkForTransaction = function(order, userId){
     var fillableOrder = SessionData.orderbook.canFillTransaction(order); //should include strike in returned order
     if (!fillableOrder){
-      if (order.Class == "Market"){
+        if (order.Class === "Market") {
         return null;
       } else {
         return Promise.resolve(createLimitOrder(order, userId, SessionData.orderbook)); //order has a Strike
@@ -1758,7 +1763,7 @@ var checkForTransaction = function(order, userId){
       });
     }
 
-}
+};
 
 /**
 order: {AheadOfThis, OrderId, UserId, Type, Volume, AssetId, Strike, Class},
@@ -1774,7 +1779,7 @@ let processOrder = function(order, userId) {
     order.Strike = (100*parseFloat(order.Strike)).toFixed(0).toString();
   }
   return Promise.resolve(checkForTransaction(order, userId)).then(data=>{return data});
-}
+};
 
 /**
 lastStrikeSold: Int, the last strike an order was sold at in the form 2010
@@ -1783,7 +1788,7 @@ assetId: String, unique id of the asset should be "INTC"
 let updateCurrentAssetPrice = function(lastStrikeSold, assetId) {
   lastStrikeSold = parseFloat(lastStrikeSold).toFixed(2);
   return admin.database().ref(session).child("/Assets").child(assetId).child("CurrentAssetPrice").set(lastStrikeSold);
-}
+};
 
 // this function hasn't been implimented yet
 let initAggOB = function() {
@@ -1797,7 +1802,7 @@ let initAggOB = function() {
   }
   //console.log(book);
   return book;
-}
+};
 
 /**
 Helper function for startGame() and doTheSuperThing()
@@ -1843,7 +1848,7 @@ let initializeMarket = function(){
       }
     });
   }
-}
+};
 
 /**
 Helper function for loadGame() and initializeMarket()
@@ -1863,7 +1868,7 @@ let loadSimulator = function() {
       simulator.startTime = new Date(currentSimulator.startTime);
       simulator.gameStart = new Date(currentSimulator.gameStart);
   });
-}
+};
 
 /**
 Helper function for loadGame()
@@ -1875,7 +1880,7 @@ let loadEvents = function() {
   .once('value').then(function(snapshot) {
     simulator.events = removeKeys(snapshot.val());
   });
-}
+};
 
 /**
 Helper function for loadGame() and initializeMarket()
@@ -1893,7 +1898,7 @@ let loadSessionData = function() {
     SessionData.orderbook = new OrderBook(currentSessionData.orderbook);
     SessionData.guid = currentSessionData.guid;
   });
-}
+};
 
 // Starts game when running locally
 if (THISISLOCAL){

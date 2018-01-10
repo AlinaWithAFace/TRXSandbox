@@ -1,6 +1,6 @@
 @import "Constants";
 
-#orderbook_test {
+#orderBookTest {
   border: $borderProperties;
   /*width:35%;*/
   height: 600px;
@@ -13,21 +13,21 @@
   padding: 10px;
 }
 
-#usertransaction, #markettransaction {
+#userTransaction, #marketTransaction {
   height: 300px;
   overflow: auto;
   border: $borderProperties;
   padding: 2%;
 }
 
-#transactionswitcher {
+#transactionSwitcher {
   float: none;
-  margin: 0px;
+  margin: 0;
 }
 
-#placeorderstyle {
+#placeOrderStyle {
   position: sticky;
-  top: 0px;
+  top: 0;
   z-index: 100;
   background: white;
 }
@@ -43,7 +43,7 @@
 }
 
 @media screen and (max-width: 669px) {
-  #usertransaction, #markettransaction {
+  #userTransaction, #marketTransaction {
     font-size: 8px;
   }
 }
@@ -55,7 +55,7 @@
 }
 
 @media screen and (max-width: 405px) {
-  #orderbook_test {
+  #orderBookTest {
     font-size: 12px;
   }
 }
